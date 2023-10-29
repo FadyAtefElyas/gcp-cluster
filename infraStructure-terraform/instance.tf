@@ -4,6 +4,7 @@ resource "google_compute_instance" "first_vm" {
   zone = var.machine_zone
   allow_stopping_for_update = true
   tags = [ "ssh" ]
+  metadata_startup_script = file("startup-script.sh")
 
     boot_disk {
       initialize_params {

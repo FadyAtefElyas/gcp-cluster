@@ -57,3 +57,18 @@ variable "account2_id" {
 variable "account2_display_name" {
   
 }
+variable "cluster_name" {
+  
+}
+variable "cluster_location" {
+  
+}
+variable "node_pool_name" {
+  
+}
+variable "cluster_machine_type" {
+  
+}
+variable "node_pool_location" {
+  
+}

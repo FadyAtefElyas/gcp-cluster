@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mongo-service-acc
+  namespace: "default"
+secrets:
+  - name: monogo-secret
+automountServiceAccountToken: true

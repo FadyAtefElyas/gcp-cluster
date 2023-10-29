@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: "mongo"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      serviceAccountName: mongo-service-acc
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mongo
+        image: us-central1-docker.pkg.dev/fady-401509/my-repository/fadyelyas/mongo:v2
+        command:
+        -  docker-entrypoint.sh
+        args: ["mongod", "--bind_ip_all", "--replSet", "rs0", "--auth", "--keyFile", "/tmp/my-key"]
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_DATABASE
+          value: "admin"  
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: "fady"
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: "123"
+        volumeMounts:
+        - name: storage-pvc
+          mountPath: /data/db
+      - name: sidecar
+        image: us-central1-docker.pkg.dev/fady-401509/my-repository/cvallance/mongo-k8s-sidecar:v1
+        env:
+        - name: MONGODB_DATABASE
+          value: "admin"
+        - name: MONGO_SIDECAR_POD_LABELS
+          value: "app=mongo"
+        - name: KUBERNATES_MONGO_SERVICE_NAME
+          value: mongo
+        - name: KUBE_NAMESPACE
+          value: "default"
+        - name: MONGODB_USERNAME
+          value: "fady"
+        - name: MONGODB_PASSWORD
+          value: "123"
+  volumeClaimTemplates:
+  - metadata:
+      name: storage-pvc
+      annotations:
+        volume.beta.kubernetes.io/storage-class: "standard-rwo"
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources: 
+        requests:
+          storage: 2Gi

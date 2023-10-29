@@ -1,6 +1,6 @@
 resource "google_container_cluster" "primary" {
-  name     = "node-app-cluster"
-  location = "europe-west6"
+  name     = var.cluster_name
+  location = var.cluster_location
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
@@ -10,14 +10,14 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
-  name       = "my-node-pool"
-  location   = "europe-west6"
+  name       = var.node_pool_name
+  location   = var.node_pool_location
   cluster    = google_container_cluster.primary.name
   node_count = 1
   
   node_config {
     preemptible  = true
-    machine_type = "e2-medium"
+    machine_type = var.cluster_machine_type
     service_account = google_service_account.kubernetes_cluster_sa.email
 
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
