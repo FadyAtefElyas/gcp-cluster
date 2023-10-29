@@ -1,6 +1,6 @@
 resource "google_artifact_registry_repository" "my-repo" {
-  location      = "us-central1"
-  repository_id = "my-repository"
-  description   = "example docker repository"
+  location      = var.repo_location
+  repository_id = var.repo_id
+  description   = var.repo_discription
   format        = "DOCKER"
 }

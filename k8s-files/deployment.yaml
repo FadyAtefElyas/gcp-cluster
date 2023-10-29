@@ -21,14 +21,8 @@ spec:
         - containerPort: 27017
         env:
         - name: DBuser
-          valueFrom:
-            secretKeyRef:
-              name: db-secret
-              key: username
+          value: "fady"
         - name: DBpass
-          valueFrom:
-            secretKeyRef:
-              name: db-secret
-              key: password
+          value: "123"
         - name: DBhosts
           value: "mongo-0.mongo,mongo-1.mongo,mongo-2.mongo"
